@@ -493,14 +493,14 @@ keyboard keyboard
 );
 
 reg         joystick_or_mouse = 0;
-wire [15:0] port_data = port_sel ? (joystick_or_mouse ? mouse_state : joystick) : 16'd0;
+wire [15:0] port_data = port_sel ? (~covox_enable & joystick_or_mouse ? mouse_state : joystick) : 16'd0;
 wire [15:0] joystick =  joystick_0 | joystick_1;
 
 wire  [8:0] pointer_dx = {ps2_mouse[4],ps2_mouse[15:8]};
 wire  [8:0] pointer_dy = {ps2_mouse[5],ps2_mouse[23:16]};
 
 reg   [6:0] mouse_state = 0;
-wire        mouse_write = bus_wtbt[0] & port_write;
+wire        mouse_write = ~covox_enable & bus_wtbt[0] & port_write;
 always @(posedge clk_sys) begin
 	reg mouse_enable = 0;
 	reg old_write;
@@ -565,6 +565,7 @@ ym2149 psg
 );
 
 // COVOX
+wire covox_enable = status[12];
 reg [15:0] out_port_data;
 wire [9:0] def_left_ch, def_right_ch;
 
@@ -579,8 +580,8 @@ always @(posedge clk_sys) begin
 	end
 end
 
-assign def_left_ch  = status[12] ? {1'b0, spk_out, 6'b000000} + {1'b0, out_port_data[7:0],  1'b0} : {spk_out, 7'b0000000};
-assign def_right_ch = status[12] ? {1'b0, spk_out, 6'b000000} + {1'b0, out_port_data[15:8], 1'b0} : {spk_out, 7'b0000000};
+assign def_left_ch  = covox_enable ? {1'b0, spk_out, 6'b000000} + {1'b0, out_port_data[7:0],  1'b0} : {spk_out, 7'b0000000};
+assign def_right_ch = covox_enable ? {1'b0, spk_out, 6'b000000} + {1'b0, out_port_data[15:8], 1'b0} : {spk_out, 7'b0000000};
 
 assign AUDIO_S = 0;
 assign AUDIO_L = {psg_active ? {1'b0, channel_a, 1'b0} + {2'b00, channel_b} + {2'b00, spk_out, 5'b00000} : def_left_ch,  6'd0};
