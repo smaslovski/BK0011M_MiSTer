@@ -235,7 +235,7 @@ localparam CONF_STR =
 	"O4,Aspect ratio,4:3,16:9;",
 	"O78,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%;",
 	"OAB,Stereo mix,none,25%,50%,100%;",
-	"OC,Covox,No,Yes;",
+	"OC,Sound mode,PSG,Covox;",
 	"-;",
 	"O5,Model,BK0011M,BK0010;",
 	"H0O1,CPU Speed,4MHz,8MHz;",
@@ -580,12 +580,12 @@ always @(posedge clk_sys) begin
 	end
 end
 
-assign def_left_ch  = covox_enable ? {1'b0, spk_out, 6'b000000} + {1'b0, out_port_data[7:0],  1'b0} : {spk_out, 7'b0000000};
-assign def_right_ch = covox_enable ? {1'b0, spk_out, 6'b000000} + {1'b0, out_port_data[15:8], 1'b0} : {spk_out, 7'b0000000};
+assign def_left_ch  = psg_active ? {1'b0, channel_a, 1'b0} + {2'b00, channel_b} + {2'b00, spk_out, 5'b00000} : {spk_out, 7'b0000000};
+assign def_right_ch = psg_active ? {1'b0, channel_c, 1'b0} + {2'b00, channel_b} + {2'b00, spk_out, 5'b00000} : {spk_out, 7'b0000000};
 
 assign AUDIO_S = 0;
-assign AUDIO_L = {psg_active ? {1'b0, channel_a, 1'b0} + {2'b00, channel_b} + {2'b00, spk_out, 5'b00000} : def_left_ch,  6'd0};
-assign AUDIO_R = {psg_active ? {1'b0, channel_c, 1'b0} + {2'b00, channel_b} + {2'b00, spk_out, 5'b00000} : def_right_ch, 6'd0};
+assign AUDIO_L = {covox_enable ? {1'b0, out_port_data[7:0],  1'b0} + {2'b0, spk_out, 5'b00000} : def_left_ch,  6'd0};
+assign AUDIO_R = {covox_enable ? {1'b0, out_port_data[15:8], 1'b0} + {2'b0, spk_out, 5'b00000} : def_right_ch, 6'd0};
 assign AUDIO_MIX = status[11:10];
 
 
