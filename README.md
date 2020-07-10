@@ -19,12 +19,12 @@ No contention model is used in turbo mode, thus speed is higher more than twice.
 ### Installation:
 Copy the *.rbf file at the root of the SD card.
 
-There are couple disk images in [extra](https://github.com/MiSTer-devel/BK0011M_MiSTer/tree/master/extra) folder with CSIDOS OS with complete ecosystem (viewer,text editor, music editor, debugger, etc.) written by me more than 20 years ago. Image also incudes some music and utils written by different people.
+There are couple disk images in [extra](https://github.com/smaslovski/BK0011M_MiSTer/tree/master/extra) folder with CSIDOS OS with complete ecosystem (viewer,text editor, music editor, debugger, etc.) written by me more than 20 years ago. Image also incudes some music and utils written by different people.
 
 *Most documents are in Russian languange.*
 
 ### HDD Utility
-Supplied [HDD Utility](https://github.com/MiSTer-devel/BK0011M_MiSTer/tree/master/SW/bkhdutil.exe) can be used to concatenate separate DSK image into one VHD image. You can put it to root of SD card. If you will name it as bk0011m.vhd then it will autoload at start.
+Supplied [HDD Utility](https://github.com/smaslovski/BK0011M_MiSTer/tree/master/SW/bkhdutil.exe) can be used to concatenate separate DSK image into one VHD image. You can put it to root of SD card. If you will name it as bk0011m.vhd then it will autoload at start.
 
 Press F12 to access OSD menu.
 
@@ -65,4 +65,4 @@ if disk support in OSD is turned off, then diagnostic utility can be launched by
 - **160000G**
 
 ### Download precompiled binaries:
-Go to [releases](https://github.com/MiSTer-devel/BK0011M_MiSTer/tree/master/releases) folder.
+Go to [releases](https://github.com/smaslovski/BK0011M_MiSTer/tree/master/releases) folder.
