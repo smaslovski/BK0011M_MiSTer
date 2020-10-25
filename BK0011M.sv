@@ -66,6 +66,7 @@ module emu
 	// b[0]: osd button
 	output  [1:0] BUTTONS,
 
+	input         CLK_AUDIO, // 24.576 MHz
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
 	output        AUDIO_S, // 1 - signed audio samples, 0 - unsigned
@@ -493,14 +494,14 @@ keyboard keyboard
 );
 
 reg         joystick_or_mouse = 0;
-wire [15:0] port_data = port_sel ? (joystick_or_mouse ? mouse_state : joystick) : 16'd0;
+wire [15:0] port_data = port_sel ? (~covox_enable & joystick_or_mouse ? mouse_state : joystick) : 16'd0;
 wire [15:0] joystick =  joystick_0 | joystick_1;
 
 wire  [8:0] pointer_dx = {ps2_mouse[4],ps2_mouse[15:8]};
 wire  [8:0] pointer_dy = {ps2_mouse[5],ps2_mouse[23:16]};
 
 reg   [6:0] mouse_state = 0;
-wire        mouse_write = bus_wtbt[0] & port_write;
+wire        mouse_write = ~covox_enable & bus_wtbt[0] & port_write;
 always @(posedge clk_sys) begin
 	reg mouse_enable = 0;
 	reg old_write;
@@ -548,7 +549,7 @@ wire [7:0] channel_b;
 wire [7:0] channel_c;
 wire [5:0] psg_active;
 
-ym2149 psg
+YM2149 psg
 (
 	.CLK(clk_sys),
 	.CE(ce_psg),
